@@ -1,5 +1,5 @@
-const nyaanInitText = "< Nyaan";
-const nyaanInitColor = "#80c0a0";
+const oktInitText = "おっきてるたまんね";
+const oktInitColor = "#80c0a0";
 
 run();
 
@@ -11,30 +11,30 @@ async function run() {
     }
 
     const tweetButtonContainer = $(".js-send-button-container");
-    const filterButton = $("<button></button>", {
-        "id": "filter-button",
-        "class": "js-send-button js-spinner-button js-show-tip btn btn-positive btn-extra-height is-disabled",
-        "text": nyaanInitText,
-        "data-original-title": "Nyaan (alt+n)"
+    const oktButton = $("<button></button>", {
+        "id": "okt-button",
+        "class": "js-send-button js-spinner-button js-show-tip btn btn-positive btn-extra-height",
+        "text": oktInitText,
+        "data-original-title": "おっきてるたまんね (alt+n)"
     });
-    tweetButtonContainer.append(filterButton);
+    tweetButtonContainer.append(oktButton);
     $(document).keydown(function (e) {
         if (e.keyCode === 78 && e.altKey) {//alt+nキー
-            translateToNyaan();
+            doOkt();
         }
     });
-    filterButton.on("click", function () {
-        translateToNyaan();
+    oktButton.on("click", function () {
+        doOkt();
     });
-    const tweetButtonObserver = new MutationObserver(function () {
+/*     const tweetButtonObserver = new MutationObserver(function () {
         if (tweetButton.classList.contains("is-disabled")) {
-            filterButton.addClass("is-disabled");
-            filterButton.text(nyaanInitText);
+            oktButton.addClass("is-disabled");
+            oktButton.text(oktInitText);
         } else {
-            filterButton.removeClass("is-disabled");
+            oktButton.removeClass("is-disabled");
         }
-        filterButton.css({"background-color": nyaanInitColor});
-    });
+        oktButton.css({"background-color": oktInitColor});
+    }); */
     tweetButtonObserver.observe(tweetButton, {
         'attributes': true,
         "attributeFilter": ["class"]
@@ -43,11 +43,11 @@ async function run() {
     const tweetTextArea = document.querySelector("textarea.js-compose-text");//jqueryオブジェクトにするとobserve出来ない
     const tweetObserver = new MutationObserver(function () {
         if (tweetTextArea.disabled) {
-            filterButton.text("");
+            oktButton.text("");
         }
         else {
-            filterButton.css({"background-color": nyaanInitColor});
-            filterButton.text(nyaanInitText);
+            oktButton.css({"background-color": okiInitColor});
+            oktButton.text(okiInitText);
         }
     });
     tweetObserver.observe(tweetTextArea, {
@@ -63,55 +63,24 @@ async function run() {
     });
 }
 
-function translateToNyaan() {
-    if (!$('#filter-button').hasClass('is-disabled')) {
-        const tweetTextArea = $('textarea.js-compose-text')[0];
-        const textAreaValue = tweetTextArea.value;
-        requestJson(textAreaValue, function () {
-            const json = JSON.parse(this.responseText);
-            if (textAreaValue === json.response) return;
-            tweetTextArea.value = json.response;
-            tweetTextArea.dispatchEvent(new Event('change'));
-            $(tweetTextArea).highlightWithinTextarea('update');
-        });
+function doOkt() {
+    const tweetTextArea = $('textarea.js-compose-text')[0];
+    const inputText = selectOkt() + "(" + String(Math.floor(Math.random()*100000) + ")" + " #sakugaokt")
+    tweetTextArea.value = inputText
+    tweetTextArea.dispatchEvent(new Event('change'))
+    $(".js-send-button").click()
+}
+
+function selectOkt() {
+    let lottery = Math.floor(Math.random() * 100)
+    if (lottery < 30) {
+        return "おっ"
+    } 
+    else if (lottery < 60) {
+        return "きてる"
     }
-}
-
-function requestJson(text, callback) {
-    const requestUrl = "https://socialityfilter.takanakahiko.me/?text=" + text;
-    const xhr = new XMLHttpRequest();
-    xhr.callback = callback;
-    const filterButton = $("#filter-button");
-    filterButton.css({"background-color": nyaanInitColor});
-    filterButton.text("Nyaaning...");
-    xhr.onreadystatechange = function () {
-        if (xhr.readyState === 4) {
-            if (xhr.status === 200 || xhr.status === 304) {
-                xhr.callback.apply(this);
-                filterButton.text("Success!");
-            } else {
-                filterButton.css({"background-color": "#F14C4A"});
-                filterButton.text("Failed");
-            }
-        }
-    };
-
-    xhr.open("GET", requestUrl, true);
-    xhr.send();
-}
-
-function requestList(callback) {
-    const requestUrl = "https://socialityfilter.takanakahiko.me/?list=true";
-    const xhr = new XMLHttpRequest();
-    xhr.callback = callback;
-    xhr.onreadystatechange = function () {
-        if (xhr.readyState === 4) {
-            if (xhr.status === 200 || xhr.status === 304) {
-                xhr.callback.apply(this);
-            }
-        }
-    };
-
-    xhr.open("GET", requestUrl, true);
-    xhr.send();
+    else if (lottery < 90) {
+        return "たまんね"
+    }
+    else return "びゅううううう"
 }
