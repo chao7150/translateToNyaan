@@ -16,7 +16,7 @@ async function run() {
         "text": oktInitText,
         "data-original-title": "おっきてるたまんね (alt+n)"
     });
-    tweetButtonContainer.append(oktButton);
+    tweetButtonContainer.prepend(oktButton);
     $(document).keydown(function (e) {
         if (e.keyCode === 78 && e.altKey) {//alt+nキー
             doOkt();
