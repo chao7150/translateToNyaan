@@ -1,7 +1,7 @@
-#filter-button{
-        background-color:#80c0a0;
-        width:85px;
+#okt-button{
+    background-color:#80c0a0;
+    color:#FFFFFF
 }
-#filter-button.is-disabled{
+#okt-button.is-disabled{
     color: #AED6C2;
 }

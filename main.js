@@ -1,12 +1,11 @@
 const oktInitText = "おっきてるたまんね";
-const oktInitColor = "#80c0a0";
 
 run();
 
 async function run() {
     const tweetButton = document.querySelector("button.js-send-button");//jqueryオブジェクトにするとobserve出来ない
     if (tweetButton === null) {
-        setTimeout(run, 1500);
+        setTimeout(run, 500);
         return;
     }
 
@@ -26,53 +25,17 @@ async function run() {
     oktButton.on("click", function () {
         doOkt();
     });
-/*     const tweetButtonObserver = new MutationObserver(function () {
-        if (tweetButton.classList.contains("is-disabled")) {
-            oktButton.addClass("is-disabled");
-            oktButton.text(oktInitText);
-        } else {
-            oktButton.removeClass("is-disabled");
-        }
-        oktButton.css({"background-color": oktInitColor});
-    }); */
-    tweetButtonObserver.observe(tweetButton, {
-        'attributes': true,
-        "attributeFilter": ["class"]
-    });
-
-    const tweetTextArea = document.querySelector("textarea.js-compose-text");//jqueryオブジェクトにするとobserve出来ない
-    const tweetObserver = new MutationObserver(function () {
-        if (tweetTextArea.disabled) {
-            oktButton.text("");
-        }
-        else {
-            oktButton.css({"background-color": okiInitColor});
-            oktButton.text(okiInitText);
-        }
-    });
-    tweetObserver.observe(tweetTextArea, {
-        "attributes": true,
-        "attributeFilter": ["disabled"]
-    });
-
-    requestList(function () {
-        const json = JSON.parse(this.responseText);
-        $($('textarea.js-compose-text')[0]).highlightWithinTextarea({
-            highlight: json.response
-        });
-    });
 }
 
 function doOkt() {
     const tweetTextArea = $('textarea.js-compose-text')[0];
-    const inputText = selectOkt() + "(" + String(Math.floor(Math.random()*100000) + ")" + " #sakugaokt")
+    const inputText = selectOkt() + " #s" + String(Math.floor(Math.random()*100000) + " #sakugaokt")
     tweetTextArea.value = inputText
     tweetTextArea.dispatchEvent(new Event('change'))
-    $(".js-send-button").click()
 }
 
 function selectOkt() {
-    let lottery = Math.floor(Math.random() * 100)
+    const lottery = Math.random() * 100
     if (lottery < 30) {
         return "おっ"
     } 
